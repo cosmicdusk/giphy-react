@@ -3,12 +3,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from 'screens/home';
 
-const Stack = createStackNavigator();
+// You can define a type for the stack navigator, so that all the screens and 
+// parameters can be typesafe.
+type RootStackParams = {
+  Home: undefined // Home does not require any special parameter
+}
+const Stack = createStackNavigator<RootStackParams>();
 
 const RootNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Home"
+      name="Home" // Now this one is typesafe
       component={HomeScreen}
       options={{ headerShown: true }}
     />
