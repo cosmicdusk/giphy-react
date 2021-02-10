@@ -4,7 +4,7 @@ import MasonryList from 'react-native-masonry-list';
 import { styles } from './Styles';
 
 interface GifsListProps {
-  images: any[];
+  images: any[]; // <---- What is the type of `images`? Why are we using `any`?
   onEndReached: () => void;
 }
 
@@ -13,7 +13,7 @@ interface GifsListStates {
 }
 
 class GifsList extends React.Component<GifsListProps, GifsListStates> {
-  images: any[];
+  images: any[]; // <--- Why is this still defined? It doesn't do anything.
 
   constructor(props: GifsListProps) {
     super(props);
@@ -23,9 +23,15 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
     };
   }
 
+  // Instead of prefixing your private methods with underscore, try declaring
+  // the `private` TypeScript keywords. If you define it like this, other people
+  // can still access it using `gifList._onCallEndReach()`.
+  //
+  // private onCallEndReach = () => {}
+
   _onCallEndReach = () => {
     if (!this.state.loading) {
-      this.props.onEndReached;
+      this.props.onEndReached; // <--- What does this line do?
       this.setState({
         loading: true,
       });
@@ -44,6 +50,11 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
         columns={2}
         containerWidth={Dimensions.get('window').width}
         onEndReachedThreshold={0.5}
+        // If a function calls another directly supplying the same parameters
+        // (empty in this case), and it does not call any other method, you can
+        // pass it directly as a property.
+        //
+        // onEndReached={this._onCallEndReach}
         onEndReached={() => {
           this._onCallEndReach();
         }}
