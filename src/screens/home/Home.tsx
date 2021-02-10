@@ -22,9 +22,21 @@ export default () => {
         const resJson = await fetch(
           `${BASE_URL}?api_key=${API_KEY}&offset=${offset}&limit=${limit}`,
         );
+        // Result data not cast to the required type. It's `any` here.
         const res = await resJson.json();
         // increase offset after fetch
+        // Offset still +10. From previous PR review, this should be changed to
+        // the actual fetched size instead.
         setOffset(offset + 10);
+
+        // Like I said in the previous PR, you should familiarize yourself with
+        // JS functional programming instead of relying on traditional, mutable
+        // imperative programming.
+        // Instead of creating a new mutable array and modify it one by one, use `.map()`
+        //
+        // const newGifs = res.data.map(gif => ({ uri: gif.images.fixed_width.url }))
+        // setGifsSrc([...gifsSrc, ...newGifs])
+        //
         let tmpList: GifsListItem[] = [];
         for (var gif of res.data) {
           tmpList.push({ uri: gif.images.fixed_width.url });
