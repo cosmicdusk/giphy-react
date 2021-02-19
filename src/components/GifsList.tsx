@@ -6,6 +6,7 @@ import { styles } from './Styles';
 interface GifsListProps {
   images: any[];
   onEndReached: () => void;
+  onCallPressImage: (id:string) => void;
 }
 
 interface GifsListStates {
@@ -15,6 +16,7 @@ interface GifsListStates {
 class GifsList extends React.Component<GifsListProps, GifsListStates> {
   images: any[];
 
+
   constructor(props: GifsListProps) {
     super(props);
     this.images = props.images;
@@ -23,9 +25,8 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
     };
   }
 
-  _onCallEndReach = () => {
+  onCallEndReach() {
     if (!this.state.loading) {
-      this.props.onEndReached;
       this.setState({
         loading: true,
       });
@@ -33,6 +34,9 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
     }
   };
 
+  onCallPressImage (id:string)  {
+    this.props.onCallPressImage(id);
+  }
   render() {
     return (
       <MasonryList
@@ -45,12 +49,17 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
         containerWidth={Dimensions.get('window').width}
         onEndReachedThreshold={0.5}
         onEndReached={() => {
-          this._onCallEndReach();
+          this.onCallEndReach();
         }}
         onImagesResolveEnd={() => {
+          console.log("resolved");
           this.setState({
             loading: false,
           });
+        }}
+        onPressImage={(item,index) => {
+          console.log(item);
+          this.onCallPressImage(item.id);
         }}
       />
     );

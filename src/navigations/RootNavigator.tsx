@@ -1,21 +1,37 @@
-import * as React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import * as React from "react";
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from "@react-navigation/stack";
 
-import HomeScreen from 'screens/home';
+import HomeScreen from "screens/home/Home";
+import DetailScreen from "screens/detail/Detail";
 
-type RootStackParams = {
-  Home: undefined; // Home does not require any special parameter
+type RootStackParamList = {
+  Home: undefined;
+  Detail: { id: string };
 };
-const Stack = createStackNavigator<RootStackParams>();
+
+type HomeProps = StackScreenProps<RootStackParamList, "Home">;
+type DetailProps = StackScreenProps<RootStackParamList, "Detail">;
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen
       name="Home"
       component={HomeScreen}
-      options={{ headerShown: true, title: '100 Top Trending' }}
+      options={{ headerShown: true, title: "100 Top Trending" }}
+    />
+    <Stack.Screen
+      name="Detail"
+      component={DetailScreen}
+      options={{ headerShown: true, title: "Detail" }}
     />
   </Stack.Navigator>
 );
 
 export default RootNavigator;
+
+export type { DetailProps, HomeProps };

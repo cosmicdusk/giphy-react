@@ -1,6 +1,23 @@
 declare module 'react-native-masonry-list' {
   import * as React from 'react';
 
+  interface MasonryListItem {
+    id: string;
+    column: number;
+    dimensions: {
+      height: number;
+      width: number;
+    };
+    index: number;
+    masonryDimensions: {
+      gutter: number;
+      height: number;
+      margin: number;
+      width: number;
+    };
+    uri: string;
+  }
+
   export interface MasonryListProps {
     itemSource?: any[];
     images: any[];
@@ -23,7 +40,7 @@ declare module 'react-native-masonry-list' {
     completeCustomComponent?: () => any | React.ReactNode;
     onImageResolved?: () => any;
     onImagesResolveEnd?: () => any;
-    onPressImage?: () => any;
+    onPressImage?: (item: MasonryListItem, index: number) => any;
     onLongPressImage?: () => any;
     onEndReached?: () => any;
     onEndReachedThreshold?: number;
@@ -34,5 +51,5 @@ declare module 'react-native-masonry-list' {
   export default class MasonryList extends React.PureComponent<
     MasonryListProps,
     any
-  > {}
+    > { }
 }
