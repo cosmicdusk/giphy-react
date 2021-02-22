@@ -12,6 +12,9 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
   // User detail
   const [user, setUser] = useState<GiphyUser>();
 
+  // You already had the gif in the previous screen, you should not fetch it 
+  // again by the ID here. Instead, put the entire GIF object into the route 
+  // params instead.
   const fetchGifs = async () => {
     try {
       const API_KEY = "AkWYlV4FWlJcQgXuTJriDZZJ93ghMbLE";
@@ -20,6 +23,7 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
       const resJson = await fetch(
         `${BASE_URL}${route.params.id}?api_key=${API_KEY}`
       );
+      // What is the type of `res`?
       const res = await resJson.json();
       setUser(res.data.user);
       setImgSource(res.data);
@@ -38,6 +42,8 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
     }
   };
 
+  // Instead of using use effect and add listener for the focus event, you should
+  // use `useIsFocused` hook. https://reactnavigation.org/docs/use-is-focused
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchGifs();
@@ -67,12 +73,17 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
             height: 50,
           }}
           source={
+            // When checking for undefined, you should use
+            // typeof user !== 'undefined' instead
             user !== undefined && user?.avatar_url !== ""
               ? { uri: user?.avatar_url }
               : require("../../assets/placeholder.png")
           }
         />
         <Text style={styles.username}>
+          {/* In this case, to simplify this expression, you should write
+              user?.display_name || "N/A"
+           */}
           {user !== undefined ? user.display_name : "N/A"}
         </Text>
       </View>
