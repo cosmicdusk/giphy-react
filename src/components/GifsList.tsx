@@ -4,6 +4,7 @@ import MasonryList from 'react-native-masonry-list';
 import { styles } from './Styles';
 
 interface GifsListProps {
+  // As mentioned in an older PR, type of `images` should not be `any[]`
   images: any[];
   onEndReached: () => void;
   onCallPressImage: (id:string) => void;
@@ -14,6 +15,7 @@ interface GifsListStates {
 }
 
 class GifsList extends React.Component<GifsListProps, GifsListStates> {
+  // This property is not being used at all. Please remove it.
   images: any[];
 
 

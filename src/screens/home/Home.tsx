@@ -46,8 +46,11 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
         // increase offset after fetch
         setOffset(offset + limit);
         let tmpList: GifsListItem[] = [];
+
+        // This loops runs in O(n^2) time. Can you make it amortized O(n)?
         for (var gif of res.data) {
           // Check for duplicate
+          //    v small typo here
           var isDublicate = gifsSrc.some(function (item) {
             return item.id == gif.id;
           });
