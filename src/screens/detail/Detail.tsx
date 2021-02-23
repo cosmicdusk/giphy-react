@@ -1,8 +1,15 @@
 import React, { Component, useEffect, useState } from "react";
 import type { DetailProps } from "../../navigations/RootNavigator";
-import { styles } from "./Styles";
 
-import { Image, View, Text, Button, Share, Alert } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  Button,
+  Share,
+  Alert,
+  StyleSheet,
+} from "react-native";
 import { GiphyUser } from "../../models/GiphyUser";
 import { GiphyItem } from "../../models/GiphyItem";
 
@@ -11,6 +18,40 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
   const [imgSource, setImgSource] = useState<GiphyItem>();
   // User detail
   const [user, setUser] = useState<GiphyUser>();
+  // Style sheet
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "center",
+      padding: 10,
+      backgroundColor: "black",
+    },
+    space: {
+      flex: 0.01,
+    },
+    info: {
+      width: "90%",
+      margin: 10,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+    },
+    title: {
+      color: "cyan",
+      fontWeight: "bold",
+      fontSize: 20,
+      marginLeft: 5,
+      textAlign: "center",
+    },
+    username: {
+      color: "white",
+      fontWeight: "bold",
+      fontSize: 20,
+      marginLeft: 5,
+      textAlign: "center",
+    },
+  });
 
   const fetchGifs = async () => {
     try {

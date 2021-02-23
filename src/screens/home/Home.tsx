@@ -6,10 +6,10 @@ import {
   ScrollView,
   View,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
 
 import GifsList from "../../components/GifsList";
-import { styles } from "./Styles";
 import type { GifsListItem } from "../../models/GifsListItem";
 import type { HomeProps } from "../../navigations/RootNavigator";
 
@@ -20,6 +20,19 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const [offset, setOffset] = useState<number>(0);
   // Limit parameter for api fetch
   const limit = 10;
+  // Style sheet
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      flexDirection: "column",
+      alignItems: "center",
+      padding: 0,
+      backgroundColor: "black",
+    },
+    space: {
+      flex: 0.01,
+    },
+  });
 
   const fetchGifs = async () => {
     if (offset < 100) {
@@ -31,7 +44,7 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
         );
         const res = await resJson.json();
         // increase offset after fetch
-        setOffset(offset + 10);
+        setOffset(offset + limit);
         let tmpList: GifsListItem[] = [];
         for (var gif of res.data) {
           // Check for duplicate
