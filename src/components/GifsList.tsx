@@ -1,12 +1,12 @@
-import React from 'react';
-import { Dimensions } from 'react-native';
-import MasonryList from 'react-native-masonry-list';
-import { styles } from './Styles';
+import React from "react";
+import { Dimensions } from "react-native";
+import MasonryList, { MasonryListItem } from "react-native-masonry-list";
+import { styles } from "./Styles";
 
 interface GifsListProps {
-  images: any[];
+  images: MasonryListItem[];
   onEndReached: () => void;
-  onCallPressImage: (id:string) => void;
+  onCallPressImage: (index: number) => void;
 }
 
 interface GifsListStates {
@@ -14,12 +14,8 @@ interface GifsListStates {
 }
 
 class GifsList extends React.Component<GifsListProps, GifsListStates> {
-  images: any[];
-
-
   constructor(props: GifsListProps) {
     super(props);
-    this.images = props.images;
     this.state = {
       loading: true,
     };
@@ -32,34 +28,31 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
       });
       this.props.onEndReached();
     }
-  };
+  }
 
-  onCallPressImage (id:string)  {
-    this.props.onCallPressImage(id);
+  onCallPressImage(index: number) {
+    this.props.onCallPressImage(index);
   }
   render() {
     return (
       <MasonryList
         imageContainerStyle={styles.imageContainerStyle}
         listContainerStyle={styles.listContainerStyle}
-        backgroundColor={'black'}
+        backgroundColor={"black"}
         rerender={false}
         images={this.props.images}
         columns={2}
-        containerWidth={Dimensions.get('window').width}
+        containerWidth={Dimensions.get("window").width}
         onEndReachedThreshold={0.5}
-        onEndReached={() => {
-          this.onCallEndReach();
-        }}
+        onEndReached={this.onCallEndReach}
         onImagesResolveEnd={() => {
-          console.log("resolved");
           this.setState({
             loading: false,
           });
         }}
-        onPressImage={(item,index) => {
-          console.log(item);
-          this.onCallPressImage(item.id);
+        sorted={true}
+        onPressImage={(item, index) => {
+          this.onCallPressImage(index);
         }}
       />
     );

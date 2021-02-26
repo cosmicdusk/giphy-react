@@ -3,19 +3,21 @@ declare module 'react-native-masonry-list' {
 
   interface MasonryListItem {
     id: string;
-    column: number;
-    dimensions: {
+    column?: number;
+    dimensions?: {
       height: number;
       width: number;
     };
-    index: number;
-    masonryDimensions: {
+    index?: number;
+    masonryDimensions?: {
       gutter: number;
       height: number;
       margin: number;
       width: number;
     };
-    uri: string;
+    source: {
+      uri: string;
+    }
   }
 
   export interface MasonryListProps {

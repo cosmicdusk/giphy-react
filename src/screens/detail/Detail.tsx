@@ -10,14 +10,12 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import { GiphyUser } from "../../models/GiphyUser";
 import { GiphyItem } from "../../models/GiphyItem";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
-  // Image source
-  const [imgSource, setImgSource] = useState<GiphyItem>();
-  // User detail
-  const [user, setUser] = useState<GiphyUser>();
+  // Gif detail
+  const [gifDetail, setGifDetail] = useState<GiphyItem>();
   // Style sheet
   const styles = StyleSheet.create({
     view: {
@@ -52,22 +50,7 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
       textAlign: "center",
     },
   });
-
-  const fetchGifs = async () => {
-    try {
-      const API_KEY = "AkWYlV4FWlJcQgXuTJriDZZJ93ghMbLE";
-      const BASE_URL = "http://api.giphy.com/v1/gifs/";
-
-      const resJson = await fetch(
-        `${BASE_URL}${route.params.id}?api_key=${API_KEY}`
-      );
-      const res = await resJson.json();
-      setUser(res.data.user);
-      setImgSource(res.data);
-    } catch (error) {
-      console.warn(error);
-    }
-  };
+  const isFocused = useIsFocused();
 
   const onShare = async (url: string) => {
     try {
@@ -79,55 +62,58 @@ const DetailScreen: React.FC<DetailProps> = ({ route, navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      fetchGifs();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setGifDetail(route.params.gif);
+    }, [])
+  );
 
   return (
     <View style={styles.view}>
-      <Image
-        style={{
-          resizeMode: "contain",
-          width: 350,
-          height: 400,
-        }}
-        source={
-          imgSource !== undefined && imgSource?.images.original.url !== ""
-            ? { uri: imgSource?.images.original.url }
-            : require("../../assets/placeholder.png")
-        }
-      />
-      <View style={styles.info}>
-        <Image
-          style={{
-            resizeMode: "cover",
-            width: 50,
-            height: 50,
-          }}
-          source={
-            user !== undefined && user?.avatar_url !== ""
-              ? { uri: user?.avatar_url }
-              : require("../../assets/placeholder.png")
-          }
-        />
-        <Text style={styles.username}>
-          {user !== undefined ? user.display_name : "N/A"}
-        </Text>
-      </View>
-      <Text style={styles.title}>
-        {imgSource !== undefined ? imgSource.title : "N/A"}
-      </Text>
-      <Button
-        onPress={() => {
-          imgSource !== undefined && imgSource?.images.original.url !== ""
-            ? onShare(imgSource?.images.original.url)
-            : {};
-        }}
-        title="Share"
-      />
+      {isFocused && (
+        <>
+          <Image
+            style={{
+              resizeMode: "contain",
+              width: 350,
+              height: 400,
+            }}
+            source={
+              typeof gifDetail !== "undefined" &&
+              gifDetail?.images.original.url !== ""
+                ? { uri: gifDetail?.images.original.url }
+                : require("../../assets/placeholder.png")
+            }
+          />
+          <View style={styles.info}>
+            <Image
+              style={{
+                resizeMode: "cover",
+                width: 50,
+                height: 50,
+              }}
+              source={
+                typeof gifDetail?.user?.avatar_url !== "undefined"
+                  ? { uri: gifDetail?.user.avatar_url }
+                  : require("../../assets/placeholder.png")
+              }
+            />
+            <Text style={styles.username}>
+              {gifDetail?.user?.display_name || "N/A"}
+            </Text>
+          </View>
+          <Text style={styles.title}>{gifDetail?.title || "N/A"}</Text>
+          <Button
+            onPress={() => {
+              typeof gifDetail !== "undefined" &&
+              gifDetail?.images.original.url !== ""
+                ? onShare(gifDetail?.images.original.url!)
+                : {};
+            }}
+            title="Share"
+          />
+        </>
+      )}
     </View>
   );
 };

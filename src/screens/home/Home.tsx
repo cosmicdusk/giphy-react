@@ -1,21 +1,20 @@
+import { GiphyItem } from "models/GiphyItem";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import {
   Image,
   useWindowDimensions,
-  ScrollView,
   View,
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-
 import GifsList from "../../components/GifsList";
-import type { GifsListItem } from "../../models/GifsListItem";
+import type { GiphyTrendingResponse } from "../../models/GiphyTrendingResponse";
 import type { HomeProps } from "../../navigations/RootNavigator";
 
 const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
-  // Array of url string, source for GifsList component
-  const [gifsSrc, setGifsSrc] = useState<GifsListItem[]>([]);
+  // Array of giphy item to store gif info
+  const [gifsSrc, setGifsSrc] = useState<GiphyItem[]>([]);
   // Offset parameter for api fetch
   const [offset, setOffset] = useState<number>(0);
   // Limit parameter for api fetch
@@ -42,20 +41,34 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
         const resJson = await fetch(
           `${BASE_URL}?api_key=${API_KEY}&offset=${offset}&limit=${limit}`
         );
-        const res = await resJson.json();
+        const res = (await resJson.json()) as GiphyTrendingResponse;
         // increase offset after fetch
         setOffset(offset + limit);
-        let tmpList: GifsListItem[] = [];
-        for (var gif of res.data) {
-          // Check for duplicate
-          var isDublicate = gifsSrc.some(function (item) {
-            return item.id == gif.id;
+        const newGifs = res.data.map((gif) => ({
+          id: gif.id,
+          images: {
+            original: {
+              url: gif.images.original.url,
+            },
+            fixed_width: {
+              url: gif.images.fixed_width.url,
+            },
+          },
+          title: gif.title,
+          user: {
+            avatar_url: gif.user?.avatar_url,
+            display_name: gif.user?.display_name,
+          },
+        })) as GiphyItem[];
+
+        setGifsSrc(() => {
+          let seen = new Set();
+          // Check for duplicates
+          return [...gifsSrc, ...newGifs].filter((item) => {
+            let k = JSON.stringify(item);
+            return seen.has(k) ? false : seen.add(k);
           });
-          if (!isDublicate) {
-            tmpList.push({ id: gif.id, uri: gif.images.fixed_width.url });
-          }
-        }
-        setGifsSrc([...gifsSrc, ...tmpList]);
+        });
       } catch (error) {
         console.warn(error);
       }
@@ -80,12 +93,15 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
       />
       <View style={styles.space} />
       <GifsList
-        images={gifsSrc}
+        images={gifsSrc.map((gif) => ({
+          id: gif.id,
+          source: { uri: gif.images.fixed_width.url },
+        }))}
         onEndReached={() => {
           fetchGifs();
         }}
-        onCallPressImage={(id: string) => {
-          navigation.navigate("Detail", { id: id });
+        onCallPressImage={(index: number) => {
+          navigation.navigate("Detail", { gif: gifsSrc[index] });
         }}
       />
     </SafeAreaView>
