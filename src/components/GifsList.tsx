@@ -1,7 +1,7 @@
-import React from "react";
-import { Dimensions } from "react-native";
-import MasonryList, { MasonryListItem } from "react-native-masonry-list";
-import { styles } from "./Styles";
+import React from 'react';
+import { Dimensions } from 'react-native';
+import MasonryList, { MasonryListItem } from 'react-native-masonry-list';
+import { styles } from './Styles';
 
 interface GifsListProps {
   images: MasonryListItem[];
@@ -38,13 +38,13 @@ class GifsList extends React.Component<GifsListProps, GifsListStates> {
       <MasonryList
         imageContainerStyle={styles.imageContainerStyle}
         listContainerStyle={styles.listContainerStyle}
-        backgroundColor={"black"}
+        backgroundColor={'black'}
         rerender={false}
         images={this.props.images}
         columns={2}
-        containerWidth={Dimensions.get("window").width}
+        containerWidth={Dimensions.get('window').width}
         onEndReachedThreshold={0.5}
-        onEndReached={this.onCallEndReach}
+        onEndReached={this.onCallEndReach.bind(this)}
         onImagesResolveEnd={() => {
           this.setState({
             loading: false,

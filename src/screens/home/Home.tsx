@@ -1,16 +1,16 @@
-import { GiphyItem } from "models/GiphyItem";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { GiphyItem } from 'models/GiphyItem';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import {
   Image,
   useWindowDimensions,
   View,
   SafeAreaView,
   StyleSheet,
-} from "react-native";
-import GifsList from "../../components/GifsList";
-import type { GiphyTrendingResponse } from "../../models/GiphyTrendingResponse";
-import type { HomeProps } from "../../navigations/RootNavigator";
+} from 'react-native';
+import GifsList from '../../components/GifsList';
+import type { GiphyTrendingResponse } from '../../models/GiphyTrendingResponse';
+import type { HomeProps } from '../../navigations/RootNavigator';
 
 const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   // Array of giphy item to store gif info
@@ -23,10 +23,10 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const styles = StyleSheet.create({
     view: {
       flex: 1,
-      flexDirection: "column",
-      alignItems: "center",
+      flexDirection: 'column',
+      alignItems: 'center',
       padding: 0,
-      backgroundColor: "black",
+      backgroundColor: 'black',
     },
     space: {
       flex: 0.01,
@@ -36,8 +36,8 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const fetchGifs = async () => {
     if (offset < 100) {
       try {
-        const API_KEY = "AkWYlV4FWlJcQgXuTJriDZZJ93ghMbLE";
-        const BASE_URL = "http://api.giphy.com/v1/gifs/trending";
+        const API_KEY = 'AkWYlV4FWlJcQgXuTJriDZZJ93ghMbLE';
+        const BASE_URL = 'http://api.giphy.com/v1/gifs/trending';
         const resJson = await fetch(
           `${BASE_URL}?api_key=${API_KEY}&offset=${offset}&limit=${limit}`
         );
@@ -85,11 +85,11 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
     <SafeAreaView style={styles.view}>
       <Image
         style={{
-          resizeMode: "stretch",
+          resizeMode: 'stretch',
           height: 150,
           width: windowWidth,
         }}
-        source={require("../../assets/giphy.gif")}
+        source={require('../../assets/giphy.gif')}
       />
       <View style={styles.space} />
       <GifsList
@@ -101,7 +101,7 @@ const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
           fetchGifs();
         }}
         onCallPressImage={(index: number) => {
-          navigation.navigate("Detail", { gif: gifsSrc[index] });
+          navigation.navigate('Detail', { gif: gifsSrc[index] });
         }}
       />
     </SafeAreaView>

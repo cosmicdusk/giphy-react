@@ -1,6 +1,0 @@
-module Pods_GiphyApp_GiphyAppTests {
-  umbrella header "Pods-GiphyApp-GiphyAppTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -12,6 +12,5 @@ export interface GiphyItem {
     user?: {
       avatar_url: string;
       display_name: string;
-      is_verified: boolean;
     };
 }
